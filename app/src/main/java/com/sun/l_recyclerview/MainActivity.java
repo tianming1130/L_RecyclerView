@@ -38,12 +38,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         recyclerView.setAdapter(mAdapter);
 
         mRefreshLayout.setOnRefreshListener(this);
-//        recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(new LinearLayoutManager(this)) {
-//            @Override
-//            public void onLoadMore(int currentPage) {
-//                simulateLoadMoreData();
-//            }
-//        });
+
         recyclerView.addOnScrollListener(new MyOnScrollListener(mAdapter,mLinearLayoutManager) {
             @Override
             public void loadMore() {
@@ -53,7 +48,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 map.put("menu_info", "ssss");
                 mDataList.add(map);
 
-                //数据重新加载完成后，提示数据发生改变，并且设置现在不在刷新
                 mAdapter.notifyDataSetChanged();
             }
         });
