@@ -13,45 +13,43 @@ import android.view.View;
  */
 
 public class MenuItemDecoration extends RecyclerView.ItemDecoration {
+    private float mDividerHeight;
+    private Paint mPaint;
+    public MenuItemDecoration() {
+        mPaint = new Paint();
+        mPaint.setAntiAlias(true);
+        mPaint.setColor(Color.RED);
+    }
 
-    private Context mContext;
-    public MenuItemDecoration(Context context) {
-        this.mContext=context;
+    @Override
+    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+        super.getItemOffsets(outRect, view, parent, state);
+        //第一个ItemView不需要在上面绘制分割线
+        if (parent.getChildAdapterPosition(view) != 0){
+            //这里直接硬编码为1px
+            outRect.top = 1;
+            //outRect.set(0,1,0,0);
+            mDividerHeight = 1;
+        }
     }
 
     @Override
     public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-        super.onDraw(c,parent,state);
+        super.onDraw(c, parent, state);
 
-        int left = parent.getPaddingLeft();
-        int right = parent.getWidth() - parent.getPaddingRight();
-        final int childCount = parent.getChildCount();
-        Paint paint=new Paint();
-        paint.setColor(Color.RED);
-        for (int i = 0; i < childCount; i++){
-            final View child = parent.getChildAt(i);
-
-            //获得child的布局信息
-            final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams)child.getLayoutParams();
-            final int top = child.getBottom() + params.bottomMargin;
-            final int bottom = top + px2dip(mContext,2);
-
-            c.drawRect(left,top,right,bottom,paint);
-            //Log.d("wnw", left + " " + top + " "+right+"   "+bottom+" "+i);
+        int childCount = parent.getChildCount();
+        for ( int i = 0; i < childCount; i++ ) {
+            View view = parent.getChildAt(i);
+            int index = parent.getChildAdapterPosition(view);
+            //第一个ItemView不需要绘制
+            if ( index == 0 ) {
+                continue;
+            }
+            float dividerTop = view.getTop() - mDividerHeight;
+            float dividerLeft = parent.getPaddingLeft();
+            float dividerBottom = view.getTop();
+            float dividerRight = parent.getWidth() - parent.getPaddingRight();
+            c.drawRect(dividerLeft,dividerTop,dividerRight,dividerBottom,mPaint);
         }
-
-    }
-    //由于Divider也有长宽高，每一个Item需要向下或者向右偏移
-    @Override
-    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            //画横线，就是往下偏移一个分割线的高度
-            outRect.set(0, 0, 0,px2dip(mContext,2));
-    }
-    public int px2dip(Context mContext, float px) {
-
-        float scale = mContext.getResources().getDisplayMetrics().density;
-
-        return (int) (px / scale + 0.5f);
-
     }
 }

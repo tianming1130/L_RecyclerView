@@ -46,9 +46,9 @@ public class MenuListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         TextView menu_info;
         public ViewHolder(View itemView) {
             super(itemView);
-            menu_thumb=itemView.findViewById(R.id.menu_thumb);
-            menu_title=itemView.findViewById(R.id.menu_title);
-            menu_info=itemView.findViewById(R.id.menu_info);
+            menu_thumb=(ImageView) itemView.findViewById(R.id.menu_thumb);
+            menu_title=(TextView) itemView.findViewById(R.id.menu_title);
+            menu_info=(TextView) itemView.findViewById(R.id.menu_info);
         }
     }
 }
