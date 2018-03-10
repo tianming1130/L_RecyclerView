@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         recyclerView.setLayoutManager(mLinearLayoutManager);
         //recyclerView.setItemAnimator(new DefaultItemAnimator());
         //recyclerView.addItemDecoration(new MyItemDecoration(this, 3, 0xffFF0000));
-        recyclerView.addItemDecoration(new MenuItemDecoration());
+        recyclerView.addItemDecoration(new MenuItemDecoration(this));
         //recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
         mAdapter=new MenuListAdapter(this,mDataList);
 
