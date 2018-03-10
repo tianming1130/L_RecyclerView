@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 map.put("menu_thumb", R.mipmap.ic_launcher);
                 map.put("menu_title", "aa");
                 map.put("menu_info", "bb");
-                mDataList.add(0,map);
+                mDataList.add(map);
                 //数据重新加载完成后，提示数据发生改变，并且设置现在不在刷新
                 mAdapter.notifyDataSetChanged();
                 mRefreshLayout.setRefreshing(false);

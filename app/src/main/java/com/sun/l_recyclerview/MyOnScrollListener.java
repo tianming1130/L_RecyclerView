@@ -20,8 +20,10 @@ public abstract class MyOnScrollListener extends RecyclerView.OnScrollListener {
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView,dx, dy);
-        LinearLayoutManager linearLayoutManager=(LinearLayoutManager) recyclerView.getLayoutManager();
-        lastVisibleItem =linearLayoutManager.findLastVisibleItemPosition();
+        if (dy>0) {
+            LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+            lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+        }
     }
     public abstract void loadMore();
 }
