@@ -1,11 +1,13 @@
 package com.sun.l_recyclerview;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,47 +21,51 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private SwipeRefreshLayout mRefreshLayout;
     private  MenuListAdapter mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
+    private Handler mHandler=new Handler();
+    private ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         recyclerView=(RecyclerView) findViewById(R.id.menu_list);
+        progressBar=(ProgressBar)findViewById(R.id.progess_bar);
         mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.layout_swipe_refresh);
         mLinearLayoutManager=new LinearLayoutManager(this);
         initData();
 
         recyclerView.setLayoutManager(mLinearLayoutManager);
         //recyclerView.setItemAnimator(new DefaultItemAnimator());
-        //recyclerView.addItemDecoration(new MenuItemDecoration(this));
         //recyclerView.addItemDecoration(new MyItemDecoration(this, 3, 0xffFF0000));
         recyclerView.addItemDecoration(new MenuItemDecoration());
         //recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
         mAdapter=new MenuListAdapter(this,mDataList);
-        recyclerView.setAdapter(mAdapter);
+
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                recyclerView.setAdapter(mAdapter);
+                progressBar.setVisibility(View.GONE);
+            }
+        },3000);
 
         mRefreshLayout.setOnRefreshListener(this);
 
         recyclerView.addOnScrollListener(new MyOnScrollListener() {
             @Override
             public void loadMore() {
-                Map<String, Object> map = new HashMap<>();
-                map.put("menu_thumb", R.mipmap.ic_launcher);
-                map.put("menu_title", "ssss");
-                map.put("menu_info", "ssss");
-                mDataList.add(map);
-                mAdapter.notifyDataSetChanged();
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("menu_thumb", R.mipmap.ic_launcher);
+                        map.put("menu_title", "ssss");
+                        map.put("menu_info", "ssss");
+                        mDataList.add(map);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                },1000);
             }
         });
-    }
-
-    private void simulateLoadMoreData() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("menu_thumb", R.mipmap.ic_launcher);
-        map.put("menu_title", "ssss");
-        map.put("menu_info", "ssss");
-        mDataList.add(map);
-        //数据重新加载完成后，提示数据发生改变，并且设置现在不在刷新
-        mAdapter.notifyDataSetChanged();
     }
 
     private void initData() {
@@ -84,21 +90,26 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             map.put("menu_title", title[i]);
             map.put("menu_info", content[i]);
             mDataList.add(map);
-            mDataList.add(map);
         }
     }
 
     @Override
     public void onRefresh() {
-        //在List最前面加入一条数据
-        Map<String, Object> map = new HashMap<>();
-        map.put("menu_thumb", R.mipmap.ic_launcher);
-        map.put("menu_title", "aa");
-        map.put("menu_info", "bb");
-        mDataList.add(0,map);
-        //数据重新加载完成后，提示数据发生改变，并且设置现在不在刷新
-        mAdapter.notifyDataSetChanged();
-        mRefreshLayout.setRefreshing(false);
-
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //清空原始数据
+                recyclerView.removeAllViews();
+                mDataList.clear();
+                Map<String, Object> map = new HashMap<>();
+                map.put("menu_thumb", R.mipmap.ic_launcher);
+                map.put("menu_title", "aa");
+                map.put("menu_info", "bb");
+                mDataList.add(0,map);
+                //数据重新加载完成后，提示数据发生改变，并且设置现在不在刷新
+                mAdapter.notifyDataSetChanged();
+                mRefreshLayout.setRefreshing(false);
+            }
+        },2000);
     }
 }

@@ -16,17 +16,15 @@ import java.util.Map;
  */
 
 public class MenuListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private Context context;
     private List<Map<String,Object>> mDataList;
     private LayoutInflater mLayoutInflater;
     public MenuListAdapter(Context context,List<Map<String,Object>> dataList){
-        this.context=context;
         this.mDataList=dataList;
         mLayoutInflater=LayoutInflater.from(context);
     }
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view=mLayoutInflater.inflate(R.layout.card_view,null);
+        View view=mLayoutInflater.inflate(R.layout.item_view,null);
         return new ViewHolder(view);
     }
     @Override
