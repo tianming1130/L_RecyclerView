@@ -18,35 +18,63 @@ import java.util.Map;
 public class MenuListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<Map<String,Object>> mDataList;
     private LayoutInflater mLayoutInflater;
+    //两个final int类型表示ViewType的两种类型
+    private final int ITEM_TYPE = 0;
+    private final int FOOT_TYPE = 1;
+
     public MenuListAdapter(Context context,List<Map<String,Object>> dataList){
         this.mDataList=dataList;
         mLayoutInflater=LayoutInflater.from(context);
     }
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view=mLayoutInflater.inflate(R.layout.item_view,null);
-        return new ViewHolder(view);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(
+                R.layout.item_view, parent, false);
+        View footView = LayoutInflater.from(parent.getContext()).inflate(
+                R.layout.foot_view, parent, false);
+        if (viewType == FOOT_TYPE)
+            return new ViewHolder(footView, FOOT_TYPE);
+        return new ViewHolder(itemView, ITEM_TYPE);
     }
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         ViewHolder viewHolder=(ViewHolder) holder;
-        viewHolder.menu_thumb.setImageResource((int)mDataList.get(position).get("menu_thumb"));
-        viewHolder.menu_title.setText((String)mDataList.get(position).get("menu_title"));
-        viewHolder.menu_info.setText((String)mDataList.get(position).get("menu_info"));
+
+        if (getItemViewType(position) == FOOT_TYPE) {
+            viewHolder.tvFootView.setText("加载中...");
+        } else {
+            viewHolder.menu_thumb.setImageResource((int)mDataList.get(position).get("menu_thumb"));
+            viewHolder.menu_title.setText((String)mDataList.get(position).get("menu_title"));
+            viewHolder.menu_info.setText((String)mDataList.get(position).get("menu_info"));
+        }
     }
     @Override
     public int getItemCount() {
-        return mDataList.size();
+        return mDataList.size()+1;
     }
-    private class ViewHolder extends RecyclerView.ViewHolder{
+    @Override
+    public int getItemViewType(int position) {
+        if (position == mDataList.size()) {
+            return FOOT_TYPE;
+        }
+        return ITEM_TYPE;
+    }
+    private class ViewHolder extends RecyclerView.ViewHolder {
         ImageView menu_thumb;
         TextView menu_title;
         TextView menu_info;
-        public ViewHolder(View itemView) {
+        TextView tvFootView;
+
+        public ViewHolder(View itemView, int viewType) {
             super(itemView);
-            menu_thumb=(ImageView) itemView.findViewById(R.id.menu_thumb);
-            menu_title=(TextView) itemView.findViewById(R.id.menu_title);
-            menu_info=(TextView) itemView.findViewById(R.id.menu_info);
+
+            if (viewType == ITEM_TYPE) {
+                menu_thumb = (ImageView) itemView.findViewById(R.id.menu_thumb);
+                menu_title = (TextView) itemView.findViewById(R.id.menu_title);
+                menu_info = (TextView) itemView.findViewById(R.id.menu_info);
+            } else if (viewType == FOOT_TYPE) {
+                tvFootView = (TextView) itemView.findViewById(R.id.tv_foot_view);
+            }
         }
     }
 }

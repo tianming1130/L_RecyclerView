@@ -62,12 +62,12 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                         map.put("menu_info", "ssss");
                         mDataList.add(map);
                         mAdapter.notifyDataSetChanged();
+                        recyclerView.smoothScrollToPosition(mDataList.size()-1);
                     }
                 },1000);
             }
         });
     }
-
     private void initData() {
         mDataList=new ArrayList<>();
         int[] image = {R.drawable.gongbaojiding, R.drawable.shuizhuroupian,
@@ -101,11 +101,13 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 //清空原始数据
                 recyclerView.removeAllViews();
                 mDataList.clear();
-                Map<String, Object> map = new HashMap<>();
-                map.put("menu_thumb", R.mipmap.ic_launcher);
-                map.put("menu_title", "aa");
-                map.put("menu_info", "bb");
-                mDataList.add(map);
+                for (int i=0;i<10;i++) {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("menu_thumb", R.mipmap.ic_launcher);
+                    map.put("menu_title", "aa");
+                    map.put("menu_info", "bb");
+                    mDataList.add(map);
+                }
                 //数据重新加载完成后，提示数据发生改变，并且设置现在不在刷新
                 mAdapter.notifyDataSetChanged();
                 mRefreshLayout.setRefreshing(false);
