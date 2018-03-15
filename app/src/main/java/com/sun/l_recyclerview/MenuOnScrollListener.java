@@ -7,7 +7,7 @@ import android.support.v7.widget.RecyclerView;
  * Created by sun on 2017/12/21.
  */
 
-public abstract class MyOnScrollListener extends RecyclerView.OnScrollListener {
+public abstract class MenuOnScrollListener extends RecyclerView.OnScrollListener {
 
     private int lastVisibleItem=-1;
     @Override

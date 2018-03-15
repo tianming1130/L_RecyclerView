@@ -17,20 +17,21 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private RecyclerView recyclerView;
-    private List<Map<String,Object>> mDataList;
+    private List<Map<String, Object>> mDataList;
     private SwipeRefreshLayout mRefreshLayout;
-    private  MenuListAdapter mAdapter;
+    private MenuListAdapter mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
-    private Handler mHandler=new Handler();
+    private Handler mHandler = new Handler();
     private ProgressBar progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        recyclerView=(RecyclerView) findViewById(R.id.menu_list);
-        progressBar=(ProgressBar)findViewById(R.id.progess_bar);
+        recyclerView = (RecyclerView) findViewById(R.id.menu_list);
+        progressBar = (ProgressBar) findViewById(R.id.progess_bar);
         mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.layout_swipe_refresh);
-        mLinearLayoutManager=new LinearLayoutManager(this);
+        mLinearLayoutManager = new LinearLayoutManager(this);
         initData();
 
         recyclerView.setLayoutManager(mLinearLayoutManager);
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         //recyclerView.addItemDecoration(new MyItemDecoration(this, 3, 0xffFF0000));
         recyclerView.addItemDecoration(new MenuItemDecoration(this));
         //recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
-        mAdapter=new MenuListAdapter(this,mDataList);
+        mAdapter = new MenuListAdapter(this, mDataList);
 
         mHandler.postDelayed(new Runnable() {
             @Override
@@ -46,11 +47,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 recyclerView.setAdapter(mAdapter);
                 progressBar.setVisibility(View.GONE);
             }
-        },3000);
+        }, 3000);
 
         mRefreshLayout.setOnRefreshListener(this);
 
-        recyclerView.addOnScrollListener(new MyOnScrollListener() {
+        recyclerView.addOnScrollListener(new MenuOnScrollListener() {
             @Override
             public void loadMore() {
                 mHandler.postDelayed(new Runnable() {
@@ -62,14 +63,15 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                         map.put("menu_info", "ssss");
                         mDataList.add(map);
                         mAdapter.notifyDataSetChanged();
-                        recyclerView.smoothScrollToPosition(mDataList.size()-1);
+                        recyclerView.smoothScrollToPosition(mDataList.size() - 1);
                     }
-                },1000);
+                }, 1000);
             }
         });
     }
+
     private void initData() {
-        mDataList=new ArrayList<>();
+        mDataList = new ArrayList<>();
         int[] image = {R.drawable.gongbaojiding, R.drawable.shuizhuroupian,
                 R.drawable.xihucuyu, R.drawable.yuxiangrousi,
                 R.drawable.suanlajidantang};
@@ -101,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 //清空原始数据
                 recyclerView.removeAllViews();
                 mDataList.clear();
-                for (int i=0;i<10;i++) {
+                for (int i = 0; i < 10; i++) {
                     Map<String, Object> map = new HashMap<>();
                     map.put("menu_thumb", R.mipmap.ic_launcher);
                     map.put("menu_title", "aa");
@@ -112,6 +114,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 mAdapter.notifyDataSetChanged();
                 mRefreshLayout.setRefreshing(false);
             }
-        },2000);
+        }, 2000);
     }
 }
